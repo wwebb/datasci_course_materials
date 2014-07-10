@@ -1,0 +1,130 @@
+1a:
+
+SELECT *
+  FROM Frequency
+ WHERE docid = '10398_txt_earn' 
+
+
+1b:
+
+SELECT *
+  FROM Frequency
+ WHERE docid = '10398_txt_earn' 
+       AND
+       count = 1;
+
+1c:
+
+SELECT *
+  FROM Frequency
+ WHERE docid = '10398_txt_earn' 
+       AND
+       count = 1
+UNION
+SELECT *
+  FROM Frequency
+ WHERE docid = '925_txt_trade' 
+       AND
+       count = 1;
+
+
+SELECT count( DISTINCT term )
+  FROM frequency
+ WHERE docid IN ( '10398_txt_earn', '925_txt_trade' ) 
+       AND
+       count = 1;
+
+
+1d:
+
+SELECT *
+  FROM frequency
+ WHERE term = 'parliament';
+
+
+1e:
+
+SELECT docid
+  FROM Frequency
+ GROUP BY docid
+HAVING SUM( count ) > 300;
+
+
+1f:  That's it!  A join on docid between the two filtered lists.
+
+SELECT docid
+  FROM Frequency
+ WHERE term = 'transactions'
+INTERSECT
+SELECT docid
+  FROM Frequency
+ WHERE term = 'world';
+
+
+SELECT count( * )
+  FROM ( 
+    SELECT DISTINCT ( docid )
+               FROM frequency
+              WHERE term = 'transactions' 
+                    AND
+                    count > 0
+    INTERSECT
+    SELECT DISTINCT ( docid )
+               FROM frequency
+              WHERE term = 'world' 
+                    AND
+                    count > 0 
+);
+
+
+2g:  That's it!  Join columns to rows, group by rows and columns, then filter to get the cell you want.
+
+SELECT a.row_num,
+       b.col_num,
+       SUM( a.value * b.value )
+  FROM A a
+       JOIN B b
+         ON a.col_num = b.row_num
+ GROUP BY a.row_num,
+          b.col_num;
+
+
+3h:
+
+SELECT sum( f1.count * f2.count )
+  FROM frequency f1
+       JOIN frequency f2
+         ON f1.term = f2.term
+ WHERE f1.docid = '10080_txt_crude' 
+       AND
+       f2.docid = '17035_txt_earn';
+
+
+3i:  That's it!  Use the query like  document, and then compute the similarity of the query with every document, and find the max score.
+
+SELECT max( tot )
+  FROM ( 
+    SELECT f.docid,
+           sum( f.count * q.count ) AS tot
+      FROM frequency f
+           JOIN ( 
+            SELECT *
+              FROM frequency
+            UNION
+            SELECT 'q' AS docid,
+                   'washington' AS term,
+                   1 AS count
+            UNION
+            SELECT 'q' AS docid,
+                   'taxes' AS term,
+                   1 AS count
+            UNION
+            SELECT 'q' AS docid,
+                   'treasury' AS term,
+                   1 AS count 
+        ) 
+        q
+             ON f.term = q.term
+     WHERE q.docid = 'q'
+     GROUP BY f.docid 
+);
