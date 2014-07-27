@@ -1,17 +1,12 @@
 __author__ = 'wwebb'
 
 import MapReduce
-import itertools
 import sys
 
 """
-Implement a relational join as a MapReduce query
-
-Create the same output as the following query:
-
-    SELECT *
-    FROM Orders, LineItem
-    WHERE Order.order_id = LineItem.order_id
+Consider a simple social network dataset consisting of a set of key-value
+pairs (person, friend) representing a friend relationship between two people.
+Describe a MapReduce algorithm to count the number of friends for each person.
 """
 
 mr = MapReduce.MapReduce()
@@ -22,23 +17,18 @@ mr = MapReduce.MapReduce()
 def mapper(record):
     # key: document identifier
     # value: document contents
-    key = record[1]
+    personA = record[0]
     #value = record[1]
     #words = value.split()
-    #print 'Key: {} - Record: {}'.format(key, record)
-    mr.emit_intermediate(key, record)
+    mr.emit_intermediate(personA, 1)
 
 def reducer(key, list_of_values):
     # key: word
     # value: list of occurrence counts
-
-    order = list_of_values[0]
-    items = list_of_values[1:]
-
-    #print 'Order: {} - Items: {}'.format(order, items)
-
-    for item in items:
-        mr.emit(order + item)
+    total = 0
+    for v in list_of_values:
+      total += v
+    mr.emit((key, total))
 
 # Do not modify below this line
 # =============================
