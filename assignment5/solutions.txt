@@ -1,0 +1,44 @@
+Question 1:
+	18146
+
+Question 2:
+	39180
+
+Question 3:
+	341.72
+
+Question 4:
+	pico
+	nano
+
+Question 5:
+	crypto
+
+Question 6:
+	5004
+
+Question 7:
+	chl_small
+	pe
+
+Question 8:
+	0.855409
+
+Question 9:
+	.9186641,  0.91902
+
+Question 10:
+	chl_small
+	pe
+
+Question 11:
+	
+Question 12:
+	pico is mistaken for ultra
+	ultra is mistaken for pico
+
+Question 13:
+	fsc_big
+
+Question 14:
+	+
